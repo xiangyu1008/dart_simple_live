@@ -1,28 +1,37 @@
-name: Dart自动编译  # 第 1 行
+name: Build dart_simple_live
 
-on:  # 第 3 行
-  push:  # 第 4 行（缩进 2 空格）
-    branches: [main]  # 第 5 行（缩进 4 空格）
+on:
+  push:
+    branches:
+      - master  # 监听 master 分支的推送事件
+  pull_request:
+    branches:
+      - master  # 监听 master 分支的 Pull Request 事件
 
-jobs:  # 第 7 行
-  build:  # 第 8 行（缩进 2 空格）
-    name: Dart编译任务  # 第 9 行（缩进 4 空格）
-    runs-on: ubuntu-latest  # 第 10 行（缩进 4 空格）
-    container:  # 第 11 行（缩进 4 空格！关键：与上一行同级）
-      image: google/dart:latest  # 第 12 行（缩进 6 空格，container 的子级）
-    
-    steps:  # 第 14 行（缩进 4 空格，与 runs-on 同级）
-      - name: 检出代码  # 第 15 行（缩进 6 空格，steps 的子级）
-        uses: actions/checkout@v4  # 第 16 行（缩进 8 空格）
-      
-      - name: 安装依赖  # 第 18 行（缩进 6 空格）
-        run: dart pub get  # 第 19 行（缩进 8 空格）
-      
-      - name: 执行编译  # 第 21 行（缩进 6 空格）
-        run: dart build  # 第 22 行（缩进 8 空格）
-      
-      - name: 上传产物  # 第 24 行（缩进 6 空格）
-        uses: actions/upload-artifact@v4  # 第 25 行（缩进 8 空格）
-        with:  # 第 26 行（缩进 8 空格）
-          name: dart_build_output  # 第 27 行（缩进 10 空格）
-          path: build/  # 第 28 行（缩进 10 空格）
+jobs:
+  build:
+    runs-on: ubuntu-latest  # 使用最新 Ubuntu 环境
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4  # 克隆代码到运行环境
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.22.0  # 根据项目要求设置 Flutter 版本
+
+      - name: Get dependencies
+        run: flutter pub get  # 安装依赖
+
+      - name: Build Android App
+        run: |
+          flutter build apk --release  # 构建 Android APK
+          flutter build appbundle --release  # 构建 Android App Bundle
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-release
+          path: |
+            build/app/outputs/flutter-apk/app-release.apk
+            build/app/outputs/bundle/release/app-release.aab
