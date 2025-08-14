@@ -1,4 +1,4 @@
-name: Build dart_simple_live
+name: Build Flutter Project
 
 on:
   push:
@@ -22,10 +22,15 @@ jobs:
         with:
           flutter-version: "3.22.0"  # 根据项目需求调整版本
 
-      # 3. 切换到 Flutter 项目子模块（simple_live_app）
+      # 3. 切换到 Flutter 项目子模块（假设项目结构为 /my_flutter_project）
       - name: Change to Flutter project directory
         run: |
-          cd simple_live_app || { echo "Directory not found"; exit 1; }
+          if [ -d "dart_simple_live" ]; then
+            cd dart_simple_live
+          else
+            echo "Flutter project directory not found!"
+            exit 1
+          fi
 
       # 4. 安装依赖（flutter pub get）
       - name: Get dependencies
