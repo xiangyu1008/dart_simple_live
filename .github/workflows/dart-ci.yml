@@ -1,0 +1,26 @@
+name: Dart CI
+
+on:
+  push:
+    branches: [ main ]  # 监听main分支的推送
+  pull_request:
+    branches: [ main ]   # 监听PR到main分支
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest   # 使用最新Ubuntu系统
+    container:
+      image: google/dart:latest  # 官方Dart镜像 [1](@ref)
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4   # 检出代码
+
+    - name: Install dependencies
+      run: dart pub get  # 安装Dart依赖
+
+    - name: Run static analysis
+      run: dart analyze  # 静态代码分析
+
+    - name: Check formatting
+      run: dart format --output=none --set-exit-if-changed .  # 检查代码格式
