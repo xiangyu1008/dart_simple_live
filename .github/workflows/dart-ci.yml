@@ -1,26 +1,28 @@
-name: Dart自动编译
+name: Dart自动编译  # 第 1 行
 
-on:
-  push:
-    branches: [main]  # 触发条件：main分支有推送时执行
+on:  # 第 3 行
+  push:  # 第 4 行（缩进 2 空格）
+    branches: [main]  # 第 5 行（缩进 4 空格）
 
-jobs:
-  build:
-    name: Dart编译任务
-    runs-on: ubuntu-latest  # 使用最新Ubuntu环境
-    container:
-      image: google/dart:latest  # 使用官方Dart镜像[1](@ref)steps:
-      - name: 检出代码
-        uses: actions/checkout@v4  # 拉取最新代码[2](@ref)
+jobs:  # 第 7 行
+  build:  # 第 8 行（缩进 2 空格）
+    name: Dart编译任务  # 第 9 行（缩进 4 空格）
+    runs-on: ubuntu-latest  # 第 10 行（缩进 4 空格）
+    container:  # 第 11 行（缩进 4 空格！关键：与上一行同级）
+      image: google/dart:latest  # 第 12 行（缩进 6 空格，container 的子级）
+    
+    steps:  # 第 14 行（缩进 4 空格，与 runs-on 同级）
+      - name: 检出代码  # 第 15 行（缩进 6 空格，steps 的子级）
+        uses: actions/checkout@v4  # 第 16 行（缩进 8 空格）
       
-      - name: 安装依赖
-        run: dart pub get  # 获取pubspec.yaml依赖
+      - name: 安装依赖  # 第 18 行（缩进 6 空格）
+        run: dart pub get  # 第 19 行（缩进 8 空格）
       
-      - name: 执行编译
-        run: dart build  # 执行编译命令
+      - name: 执行编译  # 第 21 行（缩进 6 空格）
+        run: dart build  # 第 22 行（缩进 8 空格）
       
-      - name: 上传编译产物
-        uses: actions/upload-artifact@v4  # 保存编译结果
-        with:
-          name: dart_build_output
-          path: build/  # 根据实际编译输出路径调整
+      - name: 上传产物  # 第 24 行（缩进 6 空格）
+        uses: actions/upload-artifact@v4  # 第 25 行（缩进 8 空格）
+        with:  # 第 26 行（缩进 8 空格）
+          name: dart_build_output  # 第 27 行（缩进 10 空格）
+          path: build/  # 第 28 行（缩进 10 空格）
