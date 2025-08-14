@@ -25,8 +25,8 @@ jobs:
       # 3. 切换到 Flutter 项目子模块（假设项目结构为 /my_flutter_project）
       - name: Change to Flutter project directory
         run: |
-          if [ -d "dart_simple_live" ]; then
-            cd dart_simple_live
+          if [ -d "simple_live_app" ]; then
+            cd simple_live_app
           else
             echo "Flutter project directory not found!"
             exit 1
