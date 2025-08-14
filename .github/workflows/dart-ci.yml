@@ -3,31 +3,42 @@ name: Build dart_simple_live
 on:
   push:
     branches:
-      - master  # 监听 master 分支的推送事件
+      - master
   pull_request:
     branches:
-      - master  # 监听 master 分支的 Pull Request 事件
+      - master
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # 使用最新 Ubuntu 环境
+    runs-on: ubuntu-latest
     steps:
+      # 1. 克隆代码到 GitHub Actions 环境
       - name: Checkout code
-        uses: actions/checkout@v4  # 克隆代码到运行环境
+        uses: actions/checkout@v4
 
+      # 2. 安装 Flutter SDK（指定版本）
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 3.22.0  # 根据项目要求设置 Flutter 版本
+          flutter-version: "3.22.0"  # 根据项目需求调整版本
 
+      # 3. 切换到 Flutter 项目子模块（simple_live_app）
+      - name: Change to Flutter project directory
+        run: |
+          cd simple_live_app || { echo "Directory not found"; exit 1; }
+
+      # 4. 安装依赖（flutter pub get）
       - name: Get dependencies
-        run: flutter pub get  # 安装依赖
+        run: |
+          flutter pub get
 
+      # 5. 构建 Android APK 和 App Bundle
       - name: Build Android App
         run: |
-          flutter build apk --release  # 构建 Android APK
-          flutter build appbundle --release  # 构建 Android App Bundle
+          flutter build apk --release
+          flutter build appbundle --release
 
+      # 6. 上传构建产物
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
