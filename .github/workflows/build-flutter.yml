@@ -12,7 +12,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # 1. 克隆代码到 GitHub Actions 环境
+      # 1. 克隆代码
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -20,30 +20,36 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.22.0"  # 根据项目需求调整版本
+          flutter-version: "3.22.0"  # 根据 pubspec.yaml 中的环境要求调整
 
-      # 3. 切换到 Flutter 项目子模块（假设项目结构为 /my_flutter_project）
+      # 3. 切换到 Flutter 项目目录（确保路径正确）
       - name: Change to Flutter project directory
         run: |
           if [ -d "simple_live_app" ]; then
             cd simple_live_app
           else
-            echo "Flutter project directory not found!"
+            echo "Flutter project directory 'simple_live_app' not found!"
             exit 1
           fi
 
-      # 4. 安装依赖（flutter pub get）
+      # 4. 验证当前目录（调试步骤）
+      - name: Verify current directory
+        run: |
+          pwd
+          ls -R
+
+      # 5. 安装依赖
       - name: Get dependencies
         run: |
           flutter pub get
 
-      # 5. 构建 Android APK 和 App Bundle
+      # 6. 构建 APK 和 App Bundle
       - name: Build Android App
         run: |
           flutter build apk --release
           flutter build appbundle --release
 
-      # 6. 上传构建产物
+      # 7. 上传构建产物
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
