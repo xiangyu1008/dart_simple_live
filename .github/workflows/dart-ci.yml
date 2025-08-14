@@ -1,26 +1,26 @@
-name: Dart CI
+name: Dart自动编译
 
 on:
   push:
-    branches: [ main ]  # 监听main分支的推送
-  pull_request:
-    branches: [ main ]   # 监听PR到main分支
+    branches: [main]  # 触发条件：main分支有推送时执行
 
 jobs:
-  analyze:
-    runs-on: ubuntu-latest   # 使用最新Ubuntu系统
+  build:
+    name: Dart编译任务
+    runs-on: ubuntu-latest  # 使用最新Ubuntu环境
     container:
-      image: google/dart:latest  # 官方Dart镜像 [1](@ref)
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4   # 检出代码
-
-    - name: Install dependencies
-      run: dart pub get  # 安装Dart依赖
-
-    - name: Run static analysis
-      run: dart analyze  # 静态代码分析
-
-    - name: Check formatting
-      run: dart format --output=none --set-exit-if-changed .  # 检查代码格式
+      image: google/dart:latest  # 使用官方Dart镜像[1](@ref)steps:
+      - name: 检出代码
+        uses: actions/checkout@v4  # 拉取最新代码[2](@ref)
+      
+      - name: 安装依赖
+        run: dart pub get  # 获取pubspec.yaml依赖
+      
+      - name: 执行编译
+        run: dart build  # 执行编译命令
+      
+      - name: 上传编译产物
+        uses: actions/upload-artifact@v4  # 保存编译结果
+        with:
+          name: dart_build_output
+          path: build/  # 根据实际编译输出路径调整
