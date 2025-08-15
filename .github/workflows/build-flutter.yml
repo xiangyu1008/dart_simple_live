@@ -1,67 +1,23 @@
-name: Build Flutter Project
+name: Dart CI  # 工作流名称（GitHub Actions界面显示）
 
 on:
   push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+    branches: [main]  # 触发条件：推送到main分支时运行
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # 运行环境（Ubuntu服务器）
     steps:
-      # 1. 克隆代码
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Checkout代码  # 步骤名称（日志中显示）
+        uses: actions/checkout@v4  # 调用GitHub官方Action检出代码
 
-      # 2. 安装 Flutter SDK（指定版本）
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: "3.22.0"  # 根据 pubspec.yaml 中的环境要求调整
-
-      # 3. 切换到 Flutter 项目目录（确保路径正确）
-      - name: Change to Flutter project directory
+      - name: 安装Dart SDK  # 安装Dart环境（示例）
         run: |
-          if [ -d "simple_live_app" ]; then
-            cd simple_live_app
-          else
-            echo "Flutter project directory 'simple_live_app' not found!"
-            exit 1
-          fi
+          sudo apt-get update
+          sudo apt-get install dart -y
 
-      # 4. 调试：打印当前目录和文件结构（关键！）
-      - name: Debug directory and files
-        run: |
-          echo "Current directory: $(pwd)"
-          echo "Files in current directory:"
-          ls -la
-          echo "Checking for pubspec.yaml:"
-          if [ -f "pubspec.yaml" ]; then
-            echo "✅ pubspec.yaml found"
-          else
-            echo "❌ pubspec.yaml NOT found"
-            exit 1
-          fi
+      - name: 获取依赖
+        run: dart pub get  # 执行pubspec.yaml中的依赖安装
 
-      # 5. 安装依赖
-      - name: Get dependencies
-        run: |
-          flutter pub get
-
-      # 6. 构建 APK 和 App Bundle
-      - name: Build Android App
-        run: |
-          flutter build apk --release
-          flutter build appbundle --release
-
-      # 7. 上传构建产物
-      - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: android-release
-          path: |
-            build/app/outputs/flutter-apk/app-release.apk
-            build/app/outputs/bundle/release/app-release.aab
+      - name: 运行测试
+        run: dart test  # 执行测试命令（根据项目调整）
