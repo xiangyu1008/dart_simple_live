@@ -32,11 +32,19 @@ jobs:
             exit 1
           fi
 
-      # 4. 验证当前目录（调试步骤）
-      - name: Verify current directory
+      # 4. 调试：打印当前目录和文件结构（关键！）
+      - name: Debug directory and files
         run: |
-          pwd
-          ls -R
+          echo "Current directory: $(pwd)"
+          echo "Files in current directory:"
+          ls -la
+          echo "Checking for pubspec.yaml:"
+          if [ -f "pubspec.yaml" ]; then
+            echo "✅ pubspec.yaml found"
+          else
+            echo "❌ pubspec.yaml NOT found"
+            exit 1
+          fi
 
       # 5. 安装依赖
       - name: Get dependencies
